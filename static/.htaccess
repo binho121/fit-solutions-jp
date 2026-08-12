@@ -1,0 +1,5 @@
+# Força HTTPS e o dominio canonico sem www
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.fit-solutions\.jp$ [NC]
+RewriteRule ^(.*)$ https://fit-solutions.jp/$1 [L,R=301]

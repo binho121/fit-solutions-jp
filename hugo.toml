@@ -1,0 +1,31 @@
+baseURL = 'https://fit-solutions.jp/'
+locale = 'pt-BR'
+title = 'Fit Solutions'
+disableHugoGeneratorInject = true
+
+# Só geramos as páginas que já existem no site atual — sem RSS, sem páginas de
+# categoria/tag automáticas (a "categoria" do blog é só um campo de front matter,
+# não uma taxonomia do Hugo, pra não criar URLs novas tipo /categories/marketing/).
+disableKinds = ['RSS', 'taxonomy', 'term']
+
+# Sitemap: usamos o gerador nativo do Hugo (fica automático, sem precisar do cron
+# gen_sitemap_fit.sh rodando no servidor todo dia).
+[sitemap]
+  changefreq = 'monthly'
+  priority = 0.7
+
+[security]
+  # Conteúdo .html na pasta content/ é sempre nosso (não é upload de terceiros), então
+  # liberamos o Hugo tratar esses arquivos como HTML puro (sem isso, versões recentes do
+  # Hugo bloqueiam por segurança, pensando em conteúdo vindo de fora).
+  allowContent = ['^text/html$']
+
+[params]
+  gtmId = 'GTM-NTW3V9X'
+  logoImage = '/assets/img/fit-logo-icon-removebg-preview-png.webp'
+  whatsapp = '81297219344'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

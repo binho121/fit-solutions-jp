@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fit-solutions.jp/sitemap.xml

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','{{ .Site.Params.gtmId }}');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ .Params.title }}</title>
+<meta name="description" content="{{ .Params.description }}">
+<link rel="canonical" href="{{ .Params.canonical }}">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/influ.css?v=1">
+</head>
+<body>
+{{ partial "gtm-noscript.html" . }}
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="/influ/" class="logo">influ<span>.</span></a>
+    <a class="btn ghost" href="/influempresa/">Sou uma empresa →</a>
+  </div>
+</header>
+
+<div class="demo-banner">
+  🚧 <strong>Diretório em fase de demonstração</strong> — os perfis abaixo são exemplos ilustrativos, o cadastro real ainda não abriu.
+  <a href="/influ/#lista-de-espera">Quero ser avisado quando abrir</a>
+</div>
+
+<section class="dir-hero">
+  <div class="wrap">
+    <a class="profile-back" href="/influ/">← Voltar</a>
+    <h1>Encontre o influenciador certo</h1>
+    <p>Filtre por cidade e nicho pra ver o perfil profissional completo de cada influenciador brasileiro no Japão.</p>
+
+    <form class="filters" id="dir-filters" onsubmit="return false">
+      <div class="field">
+        <label for="f-q">Buscar por nome</label>
+        <input type="text" id="f-q" placeholder="Nome do influenciador...">
+      </div>
+      <div class="field">
+        <label for="f-city">Cidade</label>
+        <select id="f-city">
+          <option value="">Todas</option>
+          {{ range .Site.Data.influ.cities }}
+          <option value="{{ . }}">{{ . }}</option>
+          {{ end }}
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-niche">Nicho</label>
+        <select id="f-niche">
+          <option value="">Todos</option>
+          {{ range .Site.Data.influ.niches }}
+          <option value="{{ . }}">{{ . }}</option>
+          {{ end }}
+        </select>
+      </div>
+      <button type="button" class="btn primary" id="f-clear">Limpar</button>
+    </form>
+  </div>
+</section>
+
+<section class="section" style="padding-top:1rem">
+  <div class="wrap">
+    <p class="dir-results-count" id="dir-count"></p>
+    <div class="dir-grid" id="dir-grid">
+      {{ range .Pages.ByTitle }}
+      <a class="dir-card"
+         href="{{ .RelPermalink }}"
+         data-name="{{ .Title | lower }}"
+         data-city="{{ .Params.city }}"
+         data-niches="{{ delimit .Params.niches "," | lower }}">
+        <div class="dir-avatar" style="background:{{ .Params.avatarColor }}">{{ .Params.avatarInitials }}</div>
+        {{ if .Params.demo }}<span class="dir-demo-badge">PERFIL DE EXEMPLO</span>{{ end }}
+        <h3>{{ .Title }}</h3>
+        <div class="dir-city">📍 {{ .Params.city }}</div>
+        <div class="dir-tags">
+          {{ range .Params.niches }}<span class="dir-tag">{{ . }}</span>{{ end }}
+        </div>
+        <div class="dir-stats">
+          {{ if .Params.followersInstagram }}<div class="dir-stat"><b>{{ .Params.followersInstagram }}</b><span>Instagram</span></div>{{ end }}
+          {{ if .Params.followersTiktok }}<div class="dir-stat"><b>{{ .Params.followersTiktok }}</b><span>TikTok</span></div>{{ end }}
+          {{ if .Params.engagement }}<div class="dir-stat"><b>{{ .Params.engagement }}</b><span>Engajamento</span></div>{{ end }}
+        </div>
+      </a>
+      {{ end }}
+    </div>
+    <div class="dir-empty" id="dir-empty" style="display:none">
+      Nenhum perfil encontrado com esses filtros.
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    Influ é um projeto em fase de validação por <a href="https://fit-solutions.jp/" target="_blank" rel="noopener">Fit Solutions</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var q = document.getElementById('f-q');
+  var city = document.getElementById('f-city');
+  var niche = document.getElementById('f-niche');
+  var clearBtn = document.getElementById('f-clear');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.dir-card'));
+  var countEl = document.getElementById('dir-count');
+  var emptyEl = document.getElementById('dir-empty');
+
+  function apply(){
+    var qv = q.value.trim().toLowerCase();
+    var cv = city.value;
+    var nv = niche.value.toLowerCase();
+    var visible = 0;
+    cards.forEach(function(card){
+      var name = card.dataset.name || '';
+      var cCity = card.dataset.city || '';
+      var cNiches = card.dataset.niches || '';
+      var match = (!qv || name.indexOf(qv) !== -1)
+        && (!cv || cCity === cv)
+        && (!nv || cNiches.indexOf(nv) !== -1);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    countEl.textContent = visible + (visible === 1 ? ' perfil encontrado' : ' perfis encontrados');
+    emptyEl.style.display = visible === 0 ? 'block' : 'none';
+  }
+  q.addEventListener('input', apply);
+  city.addEventListener('change', apply);
+  niche.addEventListener('change', apply);
+  clearBtn.addEventListener('click', function(){
+    q.value = ''; city.value = ''; niche.value = ''; apply();
+  });
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+{{ partial "head.html" . }}
+</head>
+<body>
+{{ partial "gtm-noscript.html" . }}
+{{ partial "header.html" . }}
+
+{{ .Content }}
+
+{{ partial "footer.html" . }}
+{{ partial "tail.html" . }}
+</body>
+</html>
